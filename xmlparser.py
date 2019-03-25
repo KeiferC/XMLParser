@@ -4,7 +4,7 @@
 # Usage:  python xmlparser.py [-c <category_tag>] -r <row_tag>
 #                <input_file> [-o <output_file>]
 
-import sys
+import sys, re
 
 # Main - Command Line
 # TODO: A way to assign variables via another function (e.g. by reference)?
@@ -48,12 +48,13 @@ def main():
         check_assignment(line_list, row_tag, cat_tag)
 
         #debug
-        parse(line_list, row_tag, cat_tag)
+        print(get_row(line_list, 9))
 
         #TODO: fwrite(parse(line_list, row_tag, cat_tag))
         sys.exit()
 
 # Parse
+'''
 def parse(line_list, row_tag, cat_tag):
         row_list = []
         line_list_index = None
@@ -64,7 +65,8 @@ def parse(line_list, row_tag, cat_tag):
                 if line_list_index == -1:
                         sys.exit('category tag not found')
                 
-                row_list.append(get_row(line_list, line_list_index))
+                #row_list.append(get_row(line_list, line_list_index))
+'''
                 
 
 # Search
@@ -76,7 +78,25 @@ def search(line_list, tag):
         return -1
 
 # Get row
+def get_row(line_list, index):
+        row = []
+        line = str(line_list[index])
+        row_close = None
+        tag_closer = None
 
+        line = line.split('>')
+        row_close = line[0].replace('<', '</')
+        
+        for i in range(1, len(line)):
+                if line[i] == row_close:
+                        break
+                if line[i].startswith('<'):
+                        continue
+                
+                tag_closer = re.compile(re.escape('</') + '.*')
+                row.append(tag_closer.sub('', line[i]))
+
+        return row
 
 # File Write
 def fwrite(row_list, out_filename):
