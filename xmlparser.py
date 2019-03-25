@@ -7,6 +7,7 @@
 import sys
 
 # Main - Command Line
+# TODO: A way to assign variables via another function (e.g. by reference)?
 def main():
         line_list = []
         row_tag = None
@@ -34,9 +35,11 @@ def main():
                         i += 1
         else:
                 usage()
+                sys.exit('Usage error')
 
-        # debug:
-        print('\n'.join(line_list))
+        check_assignment(line_list, row_tag)
+        #TODO: fwrite(parse())
+        sys.exit()
 
 # Parse
 
@@ -49,6 +52,12 @@ def main():
 
 # File Write
 
+
+# Check assignment
+def check_assignment(line_list, row_tag):
+        if len(line_list) == 0 or row_tag == None:
+                usage()
+                sys.exit('Missing argument(s)')
 
 # Usage failure
 def usage():
