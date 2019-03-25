@@ -10,10 +10,11 @@
 #                                           [-c <category_tag>]
 #                                           [-o <output_file>]
 #
-#       TODO:         Modularize main (variable assignment by reference)
-#                     Check for input file type (assert xml)
-#                     Add output file type varieties
-#               
+#       TODO:           Modularize main (variable assignment by reference)
+#                       Check for input file type (assert xml)
+#                       Add output file type varieties
+#                       Customize parsing on XML value representation
+#                               (e.g. attribute storage) 
 #
 
 import sys, re
