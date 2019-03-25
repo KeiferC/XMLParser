@@ -48,13 +48,13 @@ def main():
         check_assignment(line_list, row_tag, cat_tag)
 
         #debug
-        print(get_row(line_list, 9))
+        parse(line_list, row_tag, cat_tag)
 
         #TODO: fwrite(parse(line_list, row_tag, cat_tag))
         sys.exit()
 
+
 # Parse
-'''
 def parse(line_list, row_tag, cat_tag):
         row_list = []
         line_list_index = None
@@ -65,17 +65,18 @@ def parse(line_list, row_tag, cat_tag):
                 if line_list_index == -1:
                         sys.exit('category tag not found')
                 
-                #row_list.append(get_row(line_list, line_list_index))
-'''
+                row_list.append(get_row(line_list, line_list_index))
+                print(row_list)
                 
 
 # Search
 def search(line_list, tag):
         for i in range(len(line_list)):
                 if line_list[i].startswith('<' + tag):
-                        return i + 1
+                        return i
 
         return -1
+
 
 # Get row
 def get_row(line_list, index):
@@ -98,6 +99,7 @@ def get_row(line_list, index):
 
         return row
 
+
 # File Write
 def fwrite(row_list, out_filename):
         outf = open(out_filename, 'a')
@@ -114,10 +116,12 @@ def check_assignment(line_list, row_tag, cat_tag):
                 usage()
                 sys.exit('Missing argument(s)')
 
+
 # Usage failure
 def usage():
         print('''Usage:         python xmlparser.py -r <row_tag> <FILE>
                                       [-c <category_tag>]
                                       [-o <output_file>]''')
+
 
 main()
