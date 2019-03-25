@@ -1,0 +1,16 @@
+Functions:
+1) File IO
+        a) Read in an XML file
+                - Assert: file has to be XML
+        b) Write to file type of choice
+                - Main immediate focus: CSV
+                - TODO: determine other file types
+
+2) Parse XML into data structure
+        a) Data structure: 2D list (list of table rows)
+                - Justification: quick CSV conversion,
+                                 no need for data manipulation,
+                                 read: O(n)
+                                 write: O(n)
+        b) Algorithm:
+                1) 
