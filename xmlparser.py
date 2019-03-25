@@ -46,19 +46,32 @@ def main():
                 sys.exit('Usage error')
 
         check_assignment(line_list, row_tag)
-        #debug
-        row_list = [['asdf'], 
-                    ['lkjhlkjh', 'lkj'], 
-                    ['1234123', '0987', '789']]
-        fwrite(row_list, out_filename)
-        #TODO: fwrite(parse())
+        # debug
+        print('search: ' + str(search(line_list, row_tag)))
+
+        #TODO: fwrite(parse(line_list, row_tag, cat_tag))
         sys.exit()
 
 # Parse
+'''
+def parse(line_list, row_tag, cat_tag):
+        row_list = []
+        line_list_index = None
 
+        if cat_tag != None:
+                line_list_index = search(line_list, cat_tag)
+                if line_list_index == -1:
+                        sys.exit('category tag not found')
+                
+'''
 
 # Search
+def search(line_list, tag):
+        for i in range(len(line_list)):
+                if line_list[i].startswith('<' + tag):
+                        return i + 1
 
+        return -1
 
 # Get row
 
