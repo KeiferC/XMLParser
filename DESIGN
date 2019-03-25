@@ -1,7 +1,7 @@
-Functions:
 1) File IO
         a) Read in an XML file
                 - Assert: file has to be XML
+                - Check args
         b) Write to file type of choice
                 - Main immediate focus: CSV
                 - TODO: determine other file types
@@ -12,5 +12,65 @@ Functions:
                                  no need for data manipulation,
                                  read: O(n)
                                  write: O(n)
-        b) Algorithm:
-                1) 
+3) General Algorithm:
+        1) Read XML into a list of lines
+        2) Init list of rows
+        3) If category_tag exists
+                search list of lines for category_tag
+                get_row from list of lines
+                Append row to list of rows
+        4) Point to first row_tag entry (search)
+        5) While pointing to a row_tag
+                get_row from list of lines
+                Append row to list of rows
+
+4) Parsing Algorithm - get_row
+        0) Init list of values
+        1) Retrieve line from list of lines, given the index 
+        2) Get row_tag from line 
+        3) Get next tag from line
+        4) While current tag does not equal ending row_tag
+                Add value of current tag into list of values
+        5) Return list
+
+Functions -----------------------
+parse
+param:          list - list of lines from xml
+                string - row tag
+                string - category tag
+return:         list - list of rows
+description:    given a list of lines from xml, a row tag, and
+                an option category tag, runs the search and 
+                get_row functions
+
+
+search
+param:          list - list of lines from xml
+                string - tag 
+return:         int - index in list where tag is first found
+                returns -1 if not found
+description:    searches given list for the row containing the given
+                tag
+
+
+get_row
+param:          int - index of row entry in list of lines
+return:         list - list of all values in row 
+description:    given the index of an entry in the list of lines,
+                parses through XML structure and returns a list of 
+                all values between the entry tags
+
+
+fwrite
+param:          list - list of rows
+                string - output file name
+                TODO: string - filetype
+return:         n/a
+description:    given the list of rows and output file name,
+                writes list of rows in CSV form to a file
+
+
+
+
+Usage:  python xmlparser.py [-c <category_tag>] -r <row_tag>
+                <input_file> [-o <output_file>]
