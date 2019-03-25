@@ -20,13 +20,13 @@ def main():
         if (arg_len < 9) and (arg_len > 3) and (arg_len % 2 == 0):
                 while i < arg_len:
                         if (sys.argv[i] == '-r') and (i + 1 < arg_len):
-                                row_tag = str(sys.argv[i + 1])
+                                row_tag = sys.argv[i + 1]
                                 i += 1
                         elif (sys.argv[i] == '-c') and (i + 1 < arg_len):
-                                cat_tag = str(sys.argv[i + 1])
+                                cat_tag = sys.argv[i + 1]
                                 i += 1
                         elif (sys.argv[i] == '-o') and (i + 1 < arg_len):
-                                out_filename = str(sys.argv[i + 1])
+                                out_filename = sys.argv[i + 1]
 
                                 if not out_filename.endswith('.csv'):
                                         out_filename += '.csv'
