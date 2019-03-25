@@ -9,6 +9,7 @@ import sys
 # Main - Command Line
 def main():
         # TODO: command line arguments
+        usage()
 
 # Parse
 
@@ -23,4 +24,9 @@ def main():
 
 
 # Usage failure
+def usage():
+        print('''Usage:         python xmlparser.py -r <row_tag> <FILE>
+                                      [-c <category_tag>]
+                                      [-o <output_file>]''')
 
+main()
