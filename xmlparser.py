@@ -1,13 +1,32 @@
 #
-# xmlparser.py - converts given XML file to CSV file
+#       filename:       xmlparser.py
+#       author:         @KeiferC
+#       date:           25 Mar. 2019
+#       version:        0.0.1
+#       
+#       description:    converts a given XML file to a CSV file
 #
-# Usage:  python xmlparser.py [-c <category_tag>] -r <row_tag>
-#                <input_file> [-o <output_file>]
+#       usage:          python xmlparser.py -r <row_tag> <FILE>
+#                                           [-c <category_tag>]
+#                                           [-o <output_file>]
+#
+#       TODO:         Modulize main (variable assignment by reference)
+#                     Check for input file type (assert xml)
+#                     Add output file type varieties
+#               
+#
 
 import sys, re
 
-# Main - Command Line
-# TODO: A way to assign variables via another function (e.g. by reference)?
+# 
+# main
+#
+# Handles command line argument parsing and runs 
+# the program
+#
+# @param        n/a
+# @return       n/a
+#
 def main():
         line_list = []
         row_tag = None
@@ -22,9 +41,11 @@ def main():
                         if (sys.argv[i] == '-r') and (i + 1 < arg_len):
                                 row_tag = sys.argv[i + 1]
                                 i += 1
+
                         elif (sys.argv[i] == '-c') and (i + 1 < arg_len):
                                 cat_tag = sys.argv[i + 1]
                                 i += 1
+
                         elif (sys.argv[i] == '-o') and (i + 1 < arg_len):
                                 out_filename = sys.argv[i + 1]
 
@@ -32,53 +53,86 @@ def main():
                                         out_filename += '.csv'
 
                                 i += 1
-                        else: # TODO: check for file type
+
+                        else:
                                 line_list = [line.rstrip('\n') for 
                                              line in open(sys.argv[i])]
 
                                 if out_filename == None:
                                         out_filename = \
                                         sys.argv[i].rstrip('.xml') + '.csv'
-                        
                         i += 1
         else:
                 usage()
                 sys.exit('Usage error')
 
         check_assignment(line_list, row_tag, cat_tag)
-
-        #debug
-        parse(line_list, row_tag, cat_tag)
-
-        #TODO: fwrite(parse(line_list, row_tag, cat_tag))
+        fwrite(parse(line_list, row_tag, cat_tag), out_filename)
         sys.exit()
 
-
-# Parse
+# 
+# parse
+#
+# Given a list of lines from an XML file, a row tag, and
+# an optional category tag, returns a list of row elements
+#
+# @param        list - list of lines from XML file
+# @param        string - row tag
+# @param        string - category tag
+# @return       list - list of rows
+#
 def parse(line_list, row_tag, cat_tag):
         row_list = []
-        line_list_index = None
+        index = None
 
+        # Parse category tag if exists
         if cat_tag != None:
-                line_list_index = search(line_list, cat_tag)
+                index = search(line_list, cat_tag)
 
-                if line_list_index == -1:
+                if index == -1:
                         sys.exit('category tag not found')
-                
-                row_list.append(get_row(line_list, line_list_index))
-                print(row_list)
-                
 
-# Search
+                row_list.append(get_row(line_list, index))
+
+        # Parse through rows
+        index = search(line_list, row_tag)
+
+        if index == -1:
+                sys.exit('row tag not found')
+
+        while line_list[index].startswith('<' + row_tag):
+                row_list.append(get_row(line_list, index))
+                index += 1
+
+        return row_list
+
+# 
+# search
+#
+# Given a list and a tag, returns the index in which the
+# tag appears within the list. Returns -1 if not found
+#
+# @param        list - list of lines from XML file
+# @param        string - tag to be searched
+# @return       int - index in which tag is found
+#
 def search(line_list, tag):
         for i in range(len(line_list)):
                 if line_list[i].startswith('<' + tag):
                         return i
-
         return -1
 
-
-# Get row
+# 
+# get_row
+#
+# Given a list and an index, parses through the line in
+# the list and returns the isolated row elements in the
+# form of a list
+#
+# @param        list - list of lines from XML file
+# @param        int - index to parse
+# @return       list - row (list of elements)
+#
 def get_row(line_list, index):
         row = []
         line = str(line_list[index])
@@ -93,14 +147,21 @@ def get_row(line_list, index):
                         break
                 if line[i].startswith('<'):
                         continue
-                
                 tag_closer = re.compile(re.escape('</') + '.*')
                 row.append(tag_closer.sub('', line[i]))
 
         return row
 
-
-# File Write
+# 
+# fwrite
+#
+# Given a list of rows and an output filename,
+# writes the list to a file in CSV form
+#
+# @param        list - list of CSV rows
+# @param        string - output filename
+# @return       n/a
+#
 def fwrite(row_list, out_filename):
         outf = open(out_filename, 'a')
 
@@ -109,19 +170,34 @@ def fwrite(row_list, out_filename):
 
         outf.close()
 
-
-# Check assignment
+# 
+# check_assignment
+#
+# Exits program if required command line arguments
+# are not provided
+#
+# @param        list - list of lines from XML file
+# @param        string - row tag
+# @param        string - category tag
+# @return       n/a
+#
 def check_assignment(line_list, row_tag, cat_tag):
         if len(line_list) == 0 or row_tag == None or row_tag == cat_tag:
                 usage()
                 sys.exit('Missing argument(s)')
 
-
-# Usage failure
+# 
+# usage
+#
+# Prints program usage instructions
+#
+# @param        n/a
+# @return       n/a
+#
 def usage():
         print('''Usage:         python xmlparser.py -r <row_tag> <FILE>
-                                      [-c <category_tag>]
-                                      [-o <output_file>]''')
+                                   [-c <category_tag>]
+                                   [-o <output_file>]''')
 
 
 main()
