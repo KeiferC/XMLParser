@@ -54,7 +54,8 @@ description:    searches given list for the row containing the given
 
 
 get_row
-param:          int - index of row entry in list of lines
+param:          list - list of lines from xml 
+                int - index of row entry in list of lines
 return:         list - list of all values in row 
 description:    given the index of an entry in the list of lines,
                 parses through XML structure and returns a list of 

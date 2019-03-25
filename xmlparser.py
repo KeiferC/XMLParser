@@ -45,25 +45,27 @@ def main():
                 usage()
                 sys.exit('Usage error')
 
-        check_assignment(line_list, row_tag)
-        # debug
-        print('search: ' + str(search(line_list, row_tag)))
+        check_assignment(line_list, row_tag, cat_tag)
+
+        #debug
+        parse(line_list, row_tag, cat_tag)
 
         #TODO: fwrite(parse(line_list, row_tag, cat_tag))
         sys.exit()
 
 # Parse
-'''
 def parse(line_list, row_tag, cat_tag):
         row_list = []
         line_list_index = None
 
         if cat_tag != None:
                 line_list_index = search(line_list, cat_tag)
+
                 if line_list_index == -1:
                         sys.exit('category tag not found')
                 
-'''
+                row_list.append(get_row(line_list, line_list_index))
+                
 
 # Search
 def search(line_list, tag):
@@ -87,8 +89,8 @@ def fwrite(row_list, out_filename):
 
 
 # Check assignment
-def check_assignment(line_list, row_tag):
-        if len(line_list) == 0 or row_tag == None:
+def check_assignment(line_list, row_tag, cat_tag):
+        if len(line_list) == 0 or row_tag == None or row_tag == cat_tag:
                 usage()
                 sys.exit('Missing argument(s)')
 
