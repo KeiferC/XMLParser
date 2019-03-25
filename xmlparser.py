@@ -10,7 +10,7 @@
 #                                           [-c <category_tag>]
 #                                           [-o <output_file>]
 #
-#       TODO:         Modulize main (variable assignment by reference)
+#       TODO:         Modularize main (variable assignment by reference)
 #                     Check for input file type (assert xml)
 #                     Add output file type varieties
 #               
