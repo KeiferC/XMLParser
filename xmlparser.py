@@ -27,10 +27,15 @@ def main():
                                 i += 1
                         elif (sys.argv[i] == '-o') and (i + 1 < arg_len):
                                 out_filename = str(sys.argv[i + 1])
+
+                                if not out_filename.endswith('.csv'):
+                                        out_filename += '.csv'
+
                                 i += 1
                         else: # TODO: check for file type
                                 line_list = [line.rstrip('\n') for 
                                              line in open(sys.argv[i])]
+
                                 if out_filename == None:
                                         out_filename = \
                                         sys.argv[i].rstrip('.xml') + '.csv'
