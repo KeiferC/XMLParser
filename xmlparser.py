@@ -9,12 +9,11 @@
 #       usage:          python xmlparser.py -r <row_tag> <FILE>
 #                                           [-c <category_tag>]
 #                                           [-o <output_file>]
+#                                           [-a <attribute_name>]
 #
 #       TODO:           Modularize main (variable assignment by reference)
 #                       Check for input file type (assert xml)
 #                       Add output file type varieties
-#                       Customize parsing on XML value representation
-#                               (e.g. attribute storage) 
 #
 
 import sys, re
@@ -33,11 +32,12 @@ def main():
         row_tag = None
         cat_tag = None
         out_filename = None
+        attribute = None
         arg_len = len(sys.argv)
         i = 1
 
         # Command Line Parsing
-        if (arg_len < 9) and (arg_len > 3) and (arg_len % 2 == 0):
+        if (arg_len < 11) and (arg_len > 3) and (arg_len % 2 == 0):
                 while i < arg_len:
                         if (sys.argv[i] == '-r') and (i + 1 < arg_len):
                                 row_tag = sys.argv[i + 1]
@@ -55,6 +55,10 @@ def main():
 
                                 i += 1
 
+                        elif (sys.argv[i] == '-a') and (i + 1 < arg_len):
+                                attribute = sys.argv[i + 1]
+                                i += 1
+
                         else:
                                 line_list = [line.rstrip('\n') for 
                                              line in open(sys.argv[i])]
@@ -68,7 +72,7 @@ def main():
                 sys.exit('Usage error')
 
         check_assignment(line_list, row_tag, cat_tag)
-        fwrite(parse(line_list, row_tag, cat_tag), out_filename)
+        fwrite(parse(line_list, row_tag, cat_tag, attribute), out_filename)
         sys.exit()
 
 # 
@@ -80,9 +84,10 @@ def main():
 # @param        list - list of lines from XML file
 # @param        string - row tag
 # @param        string - category tag
+# @param        string - attribute name
 # @return       list - list of rows
 #
-def parse(line_list, row_tag, cat_tag):
+def parse(line_list, row_tag, cat_tag, attribute):
         row_list = []
         index = None
 
@@ -93,7 +98,7 @@ def parse(line_list, row_tag, cat_tag):
                 if index == -1:
                         sys.exit('category tag not found')
 
-                row_list.append(get_row(line_list, index))
+                row_list.append(get_row(line_list, index, attribute))
 
         # Parse through rows
         index = search(line_list, row_tag)
@@ -102,7 +107,7 @@ def parse(line_list, row_tag, cat_tag):
                 sys.exit('row tag not found')
 
         while line_list[index].startswith('<' + row_tag):
-                row_list.append(get_row(line_list, index))
+                row_list.append(get_row(line_list, index, attribute))
                 index += 1
 
         return row_list
@@ -132,9 +137,10 @@ def search(line_list, tag):
 #
 # @param        list - list of lines from XML file
 # @param        int - index to parse
+# @param        string - attribute
 # @return       list - row (list of elements)
 #
-def get_row(line_list, index):
+def get_row(line_list, index, attribute):
         row = []
         line = str(line_list[index])
         row_close = None
@@ -146,8 +152,16 @@ def get_row(line_list, index):
         for i in range(1, len(line)):
                 if line[i] == row_close:
                         break
+
+                if line[i].startswith('<') and attribute != None and \
+                   line[i].find(attribute + '="') != -1:
+                        row.append(re.search(attribute + r'="(.*?)"',
+                                             line[i]).group(1))
+                        continue
+
                 if line[i].startswith('<'):
                         continue
+
                 tag_closer = re.compile(re.escape('</') + '.*')
                 row.append(tag_closer.sub('', line[i]))
 
@@ -198,7 +212,8 @@ def check_assignment(line_list, row_tag, cat_tag):
 def usage():
         print('''Usage:         python xmlparser.py -r <row_tag> <FILE>
                                    [-c <category_tag>]
-                                   [-o <output_file>]''')
+                                   [-o <output_file>]
+                                   [-a <attribute_name>]''')
 
 
 main()

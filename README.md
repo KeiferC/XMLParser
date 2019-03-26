@@ -9,7 +9,9 @@ $ git init
 $ git clone https://github.com/KeiferC/XMLParser.git
 $ cd XMLParser
 $ python xmlparser.py -r <row_tag> <FILE> 
-                      [-c <category_tag>] [-o <output_file>]
+                      [-c <category_tag>] 
+                      [-o <output_file>]
+                      [-a <attribute_name>]
 ```
 
 ### Requirements
